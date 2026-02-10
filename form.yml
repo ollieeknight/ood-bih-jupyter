@@ -15,71 +15,76 @@ attributes:
     widget: "select"
     label: "Jupyter Lab/Notebook"
     options:
-      - [ "lab",      "lab"      ]
-      - [ "notebook", "notebook" ]
+      - [ "Jupyter Lab", "lab" ]
+      - [ "Jupyter Notebook", "notebook" ]
     help: |
-      Use "new" Jupyter Lab or "legacy" Jupyter Notebook.
+      Choose between the modern Jupyter Lab interface or the legacy Jupyter Notebook.
   python_provider:
     widget: "select"
-    label: "Python Source"
+    label: "Python environment source"
     help: |
       You can either use one of the provided Apptainer images
       or provide a path to your own Conda installation.
     options:
       - [ "Apptainer", "apptainer", data-hide-conda-path: true, data-set-conda-path: "hidden" ]
-      - [ "Conda",   "miniconda", data-hide-apptainer-image: true, data-set-conda-path: "" ]
+      - [ "Conda environment", "miniconda", data-hide-apptainer-image: true, data-set-conda-path: "" ]
   conda_path:
     widget: "text_field"
-    label: "Conda Path"
+    label: "Path to conda environment"
     help: |
-      Specify the path including the "bin" of the Conda installation
-      you want to use. Separate name of environment with a colon.
-      Example: `~/work/miniforge/bin:fancy-jupyter`.
+      Specify the full path to your Miniforge3 installation's 'bin' directory,
+      followed by a colon and the name of your Python environment.
+      Example: `~/work/bin/miniforge3/bin:fancy-jupyter`
     required: true
   work_dir:
     widget: "text_field"
-    label: "Work Dir"
+    label: "Working directory"
     help: |
-      Specify the path to the work dirctory.
-      If you leave this blank then you would start in your `$HOME`.
+      Specify the path to the working directory.
+      If you leave this blank, you will start in your `$HOME` directory.
   apptainer_image:
     widget: "select"
-    label: "Apptainer Image"
+    label: "Jupyter server version"
     help: |
       The Apptainer images are based on the miniconda3 Docker image
-      and install Jupyter notebook, scikit-learn, pandas, and other
-      popular packages.
+      and include Jupyter notebook, scikit-learn, pandas, and other
+      popular scientific Python packages.
     options:
-      - [ "bih-jupyter", "bih-jupyter-0.3" ]
+      - [ "BIH Jupyter 0.3", "bih-jupyter-0.3" ]
   bih_cpus:
     widget: "number_field"
-    label: "Number of cores"
-    value: 4
-    help: Number of cores to allocate.
+    label: "Number of CPU cores"
+    value: 8
     min: 1
     max: 64
     step: 1
+    help: "Allocate the number of CPU cores for your Jupyter server"
   bih_mem:
     widget: "number_field"
-    label: "Memory [GiB]"
-    value: 4
-    help: Memory to allocate for job.
+    label: "Memory (in GB)"
+    value: 32
     min: 1
     max: 256
+    help: "Specify the amount of RAM (in gigabytes) for your Jupyter session"
   bih_time:
     widget: "text_field"
-    label: "Running time"
-    value: "1d"
+    label: "Job running time"
+    value: "12h"
     required: true
-    help: "Specify the running time as either hours (e.g., '12h') or days (e.g., '3d')."
+    help: |
+      Define the maximum duration for your Jupyter server session.
+      Use 'h' for hours (e.g., '12h') or 'd' for days (e.g., '3d').
+      Maximum allowed: 14 days.
     pattern: "^([0-9]{1,2}h|[1-9]d|1[0-4]d)$"
   bih_partition:
     widget: select
-    label: "partition to run in"
-    value: "long"
+    label: "HPC partition"
+    value: "medium"
     help: |
-      - **medium** - at most 7 days available (up to 128 cores in all jobs)
-      - **long** - at most 28 days available (upt o 32 cores in all jobs)
+      - **medium**: Up to 7 days runtime, with a maximum of 128 cores across all your jobs.
+      - **long**: Up to 28 days runtime, with a maximum of 32 cores across all your jobs.
+      - **gpu**: GPU partition for GPU-accelerated computing.
     options:
-      - [ "medium", "medium" ]
-      - [ "long", "long" ]
+      - [ "Medium (Max 7 days, 128 cores)", "medium" ]
+      - [ "Long (Max 28 days, 32 cores)", "long" ]
+      - [ "GPU (GPU-accelerated computing)", "gpu" ]
