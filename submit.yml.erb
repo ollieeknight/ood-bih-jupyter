@@ -21,3 +21,7 @@ script:
     - "<%= bih_partition %>"
     - "--time"
     - "<%= formatted_time %>"
+<% if bih_partition == "gpu" %>
+    - "--gres"
+    - "gpu:1"
+<% end %>
