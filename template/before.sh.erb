@@ -22,10 +22,16 @@ export CONFIG_FILE="${PWD}/config.py"
 
 # Generate Jupyter configuration file with secure file permissions
 # We need different options for Notebook v7 and older versions
-<% if context.conda_path.include? ":" %>
-  jupyter_version=$(<%= File.expand_path("..", context.conda_path.split(":")[0]) %>/envs/<%= context.conda_path.split(":")[1] %>/bin/jupyter notebook --version)
+<% if context.python_provider == "pixi" && !context.pixi_path.to_s.empty? %>
+  jupyter_version=$(<%= context.pixi_path.to_s.gsub('~', '${HOME}') %>/.pixi/envs/default/bin/jupyter notebook --version 2>&1)
+<% elsif context.python_provider == "miniconda" && context.conda_path.to_s != "" && context.conda_path.to_s != "hidden" %>
+  <% if context.conda_path.include? ":" %>
+    jupyter_version=$(<%= File.expand_path("..", context.conda_path.split(":")[0]) %>/envs/<%= context.conda_path.split(":")[1] %>/bin/jupyter notebook --version)
+  <% else %>
+    jupyter_version=$(<%= context.conda_path.split(":")[0] %>/jupyter notebook --version)
+  <% end %>
 <% else %>
-  jupyter_version=$(<%= context.conda_path.split(":")[0] %>/jupyter notebook --version)
+  jupyter_version=$(jupyter notebook --version 2>/dev/null || echo "0")
 <% end %>
 
 if [[ $jupyter_version == 7* ]]; then
