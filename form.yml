@@ -4,7 +4,6 @@ form:
   - python_provider
   - conda_path
   - pixi_path
-  - apptainer_image
   - jupyter_kind
   - work_dir
   - bih_cpus
@@ -24,20 +23,19 @@ attributes:
     widget: "select"
     label: "Python environment source"
     help: |
-      You can either use one of the provided Apptainer images
-      or provide a path to your own Conda installation.
+      Python is provided through a conda or pixi environment.
     options:
-      - [ "Apptainer", "apptainer", data-hide-conda-path: true, data-set-conda-path: "hidden", data-hide-pixi-path: true ]
-      - [ "Conda environment", "miniconda", data-hide-apptainer-image: true, data-set-conda-path: "", data-hide-pixi-path: true ]
-      - [ "Pixi environment", "pixi", data-hide-conda-path: true, data-set-conda-path: "", data-hide-apptainer-image: true, data-set-pixi-path: "~/work/bin/pixi/jupyter" ]
+      - [ "Conda environment", "miniconda", data-set-conda-path: "~/work/bin/miniforge3/bin:python_singlecell", data-hide-pixi-path: true ]
+      - [ "Pixi environment", "pixi", data-hide-conda-path: true, data-set-conda-path: "", data-set-pixi-path: "~/work/bin/pixi/jupyter" ]
   conda_path:
     widget: "text_field"
     label: "Path to conda environment"
     help: |
       Specify the full path to your Miniforge3 installation's 'bin' directory,
       followed by a colon and the name of your Python environment.
-      Example: `~/work/bin/miniforge3/bin:fancy-jupyter`
-    required: true
+      Example: `~/work/bin/miniforge3/bin:python_singlecell`
+    required: false
+    value: "~/work/bin/miniforge3/bin:python_singlecell"
   pixi_path:
     widget: "text_field"
     label: "Path to pixi project directory"
@@ -52,15 +50,6 @@ attributes:
     help: |
       Specify the path to the working directory.
       If you leave this blank, you will start in your `$HOME` directory.
-  apptainer_image:
-    widget: "select"
-    label: "Jupyter server version"
-    help: |
-      The Apptainer images are based on the miniconda3 Docker image
-      and include Jupyter notebook, scikit-learn, pandas, and other
-      popular scientific Python packages.
-    options:
-      - [ "BIH Jupyter 0.3", "bih-jupyter-0.3" ]
   bih_cpus:
     widget: "number_field"
     label: "Number of CPU cores"
@@ -95,6 +84,6 @@ attributes:
       - **long**: Up to 28 days runtime, with a maximum of 32 cores across all your jobs.
       - **gpu**: GPU partition for GPU-accelerated computing.
     options:
-      - [ "Medium (Max 7 days, 128 cores)", "medium" ]
-      - [ "Long (Max 28 days, 32 cores)", "long" ]
-      - [ "GPU (GPU-accelerated computing)", "gpu" ]
+      - [ "Medium (7d, up to 128 CPU)", "medium" ]
+      - [ "Long (28d, up to 32 CPU)", "long" ]
+      - [ "GPU (GPU-accelerated)", "gpu" ]

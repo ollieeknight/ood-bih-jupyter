@@ -2,12 +2,7 @@
 
 set -x
 
-BINDS=/data
-
-<% if context.python_provider == "apptainer" %>
-  apptainer exec --no-home -B "$BINDS" /opt/ood/singularity-images/<%= context.apptainer_image %>.sif \
-      jupyter <%= context.jupyter_kind %> --config="${CONFIG_FILE}"
-<% elsif context.python_provider == "pixi" && !context.pixi_path.to_s.empty? %>
+<% if context.python_provider == "pixi" && !context.pixi_path.to_s.empty? %>
   PIXI_PATH="<%= context.pixi_path.to_s.gsub('~', '${HOME}') %>"
   export PATH="${PIXI_PATH}/.pixi/envs/default/bin:$PATH"
   jupyter <%= context.jupyter_kind %> --config="${CONFIG_FILE}"
