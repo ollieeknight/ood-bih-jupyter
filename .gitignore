@@ -203,3 +203,4 @@ tags
 [._]*.un~
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,emacs,python,jupyternotebook
+.DS_Store
